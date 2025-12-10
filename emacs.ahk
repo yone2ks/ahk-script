@@ -1,7 +1,16 @@
 ;;
 ;; An AutoHotkey v2 script that provides emacs-like keybinding on Windows
 ;;
-
+;; NOTE: Keys that are intentionally *not* remapped to Emacs behavior
+;;   - C-c / C-v : Copy / Paste (kept as the application's standard shortcuts)
+;;   - C-z       : Undo (kept as the application's standard shortcut)
+;;   - C-q, C-t  : Not bound in this script (use the application's default behavior)
+;;   - C-Tab     : Prefer app / OS tab switching and similar shortcuts
+;;   - Win key   : Prefer OS-level shortcuts
+;;
+;; In general, any C- / M- style key **not defined in this file**
+;; will behave as the application's original shortcut.
+;;
 SetKeyDelay 0
 
 ; turns to be 1 when ctrl-x is pressed
