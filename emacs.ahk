@@ -7,6 +7,8 @@
 ;;   - C-c / C-v : Copy / Paste (kept as the application's standard shortcuts)
 ;;   - C-s       : Save (kept as the application's standard shortcut)
 ;;   - C-w       : Close / tab close, etc. (kept as the application's standard shortcut)
+;;   - C-.       : Next tab (mapped to the application's standard Ctrl+Tab)
+;;   - C-,       : Previous tab (mapped to the application's standard Ctrl+Shift+Tab)
 ;;   - C-z       : Undo (kept as the application's standard shortcut)
 ;;   - C-q, C-t  : Not bound in this script (use the application's default behavior)
 ;;   - C-Tab     : Prefer app / OS tab switching and similar shortcuts
@@ -434,4 +436,20 @@ $^l::{
     Send A_ThisHotkey
   else
     backward_char()
+}
+
+; Ctrl+. -> Ctrl+Tab (next tab)
+$^.::{
+  if is_target()
+    Send A_ThisHotkey
+  else
+    Send "^{Tab}"
+}
+ 
+; Ctrl+, -> Ctrl+Shift+Tab (previous tab)
+$^,::{
+  if is_target()
+    Send A_ThisHotkey
+  else
+    Send "^+{Tab}"
 }
