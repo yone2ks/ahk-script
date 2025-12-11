@@ -5,6 +5,8 @@
 
 ;; NOTE: Keys that are intentionally *not* remapped to Emacs behavior
 ;;   - C-c / C-v : Copy / Paste (kept as the application's standard shortcuts)
+;;   - C-s       : Save (kept as the application's standard shortcut)
+;;   - C-w       : Close / tab close, etc. (kept as the application's standard shortcut)
 ;;   - C-z       : Undo (kept as the application's standard shortcut)
 ;;   - C-q, C-t  : Not bound in this script (use the application's default behavior)
 ;;   - C-Tab     : Prefer app / OS tab switching and similar shortcuts
@@ -18,100 +20,124 @@ SetKeyDelay 0
 ; turns to be 1 when ctrl-x is pressed
 is_pre_x := 0
 ; turns to be 1 when ctrl-space is pressed
-is_pre_spc := 0
+is_mark_set := 0
+; turns to be 1 while Muhenkan is used as Ctrl
+is_muhenkan_ctrl := 0
 
-; Applications you want to disable emacs-like keybindings
-; (Please comment out applications you don't use)
+; Applications / conditions where you want to disable emacs-like keybindings
+; (When this returns 1, the script passes the original shortcut through)
 is_target() {
+  global is_muhenkan_ctrl
+
+  ; When Ctrl comes from the Muhenkan key, always prefer the app's default
+  ; shortcut behavior (e.g., Muhenkan+a -> standard Ctrl+a = Select All).
+  if is_muhenkan_ctrl
+    return 1
+
+  ; Example: disable Emacs-like bindings on specific apps
   ;if WinActive("ahk_exe Windsurf.exe") ; Windsurf
   ;  return 1
+
   return 0
 }
 
+; Muhenkan key as Ctrl, but bypass Emacs bindings (use app defaults)
+sc07B::{
+  global is_muhenkan_ctrl
+  is_muhenkan_ctrl := 1
+  Send "{LCtrl down}"
+}
+
+sc07B up::{
+  global is_muhenkan_ctrl
+  is_muhenkan_ctrl := 0
+  Send "{LCtrl up}"
+}
+
 delete_char() {
-  global is_pre_spc
+  global is_mark_set
   Send "{Del}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 delete_backward_char() {
-  global is_pre_spc
+  global is_mark_set
   Send "{BS}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 kill_line() {
-  global is_pre_spc
+  global is_mark_set
   Send "{ShiftDown}{END}{ShiftUp}"
   Sleep 50 ; [ms] this value depends on your environment
   Send "^x"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 open_line() {
-  global is_pre_spc
+  global is_mark_set
   Send "{END}{Enter}{Up}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 quit() {
-  global is_pre_spc
+  global is_mark_set
   Send "{Esc}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 newline() {
-  global is_pre_spc
+  global is_mark_set
   Send "{Enter}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 indent_for_tab_command() {
-  global is_pre_spc
+  global is_mark_set
   Send "{Tab}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 newline_and_indent() {
-  global is_pre_spc
+  global is_mark_set
   Send "{Enter}{Tab}"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 isearch_forward() {
-  global is_pre_spc
+  global is_mark_set
   Send "^f"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 isearch_backward() {
-  global is_pre_spc
+  global is_mark_set
   Send "^f"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 kill_region() {
-  global is_pre_spc
+  global is_mark_set
   Send "^x"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 kill_ring_save() {
-  global is_pre_spc
+  global is_mark_set
   Send "^c"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 yank() {
-  global is_pre_spc
+  global is_mark_set
   Send "^v"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 undo() {
-  global is_pre_spc
+  global is_mark_set
   Send "^z"
-  is_pre_spc := 0
+  is_mark_set := 0
 }
 
 find_file() {
@@ -133,64 +159,64 @@ kill_emacs() {
 }
 
 move_beginning_of_line() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{Home}"
   else
     Send "{Home}"
 }
 
 move_end_of_line() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{End}"
   else
     Send "{End}"
 }
 
 previous_line() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{Up}"
   else
     Send "{Up}"
 }
 
 next_line() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{Down}"
   else
     Send "{Down}"
 }
 
 forward_char() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{Right}"
   else
     Send "{Right}"
 }
 
 backward_char() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{Left}"
   else
     Send "{Left}"
 }
 
 scroll_up() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{PgUp}"
   else
     Send "{PgUp}"
 }
 
 scroll_down() {
-  global is_pre_spc
-  if is_pre_spc
+  global is_mark_set
+  if is_mark_set
     Send "+{PgDn}"
   else
     Send "{PgDn}"
@@ -282,17 +308,17 @@ scroll_down() {
     indent_for_tab_command()
 }
 
-^s::{
-  global is_pre_x
-  if is_target()
-    Send A_ThisHotkey
-  else {
-    if is_pre_x
-      save_buffer()
-    else
-      isearch_forward()
-  }
-}
+;; ^s::{
+;;   global is_pre_x
+;;   if is_target()
+;;     Send A_ThisHotkey
+;;   else {
+;;     if is_pre_x
+;;       save_buffer()
+;;     else
+;;       isearch_forward()
+;;   }
+;; }
 
 ^r::{
   if is_target()
@@ -301,12 +327,12 @@ scroll_down() {
     isearch_backward()
 }
 
-^w::{
-  if is_target()
-    Send A_ThisHotkey
-  else
-    kill_region()
-}
+;; ^w::{
+;;   if is_target()
+;;     Send A_ThisHotkey
+;;   else
+;;     kill_region()
+;; }
 
 !w::{
   if is_target()
@@ -331,26 +357,26 @@ scroll_down() {
 
 ; Ctrl + Space (vk20) toggles selection mode like Emacs' set-mark-command
 ^vk20::{
-  global is_pre_spc
+  global is_mark_set
   if is_target()
     Send "{CtrlDown}{Space}{CtrlUp}"
   else {
-    if is_pre_spc
-      is_pre_spc := 0
+    if is_mark_set
+      is_mark_set := 0
     else
-      is_pre_spc := 1
+      is_mark_set := 1
   }
 }
 
 ^@::{
-  global is_pre_spc
+  global is_mark_set
   if is_target()
     Send A_ThisHotkey
   else {
-    if is_pre_spc
-      is_pre_spc := 0
+    if is_mark_set
+      is_mark_set := 0
     else
-      is_pre_spc := 1
+      is_mark_set := 1
   }
 }
 
