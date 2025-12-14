@@ -9,6 +9,7 @@
 ;;   - C-w       : Close / tab close, etc. (kept as the application's standard shortcut)
 ;;   - C-.       : Next tab (mapped to the application's standard Ctrl+Tab)
 ;;   - C-,       : Previous tab (mapped to the application's standard Ctrl+Shift+Tab)
+;;   - C-y       : F2 (useful for renaming files or editing Excel cells, not yank)
 ;;   - C-z       : Undo (kept as the application's standard shortcut)
 ;;   - C-q, C-t  : Not bound in this script (use the application's default behavior)
 ;;   - C-Tab     : Prefer app / OS tab switching and similar shortcuts
@@ -351,7 +352,7 @@ $^y::{
   if is_target()
     Send A_ThisHotkey
   else
-    yank()
+    Send "{F2}"
 }
 
 $^/::{
