@@ -14,6 +14,10 @@
 ;;   - C-Tab     : Prefer app / OS tab switching and similar shortcuts
 ;;   - Win key   : Prefer OS-level shortcuts
 ;;
+;; Also, while the Muhenkan key is held down, it acts as Ctrl and
+;; lets the application's *original* Ctrl+key shortcuts run unchanged
+;; (e.g., Muhenkan+a behaves exactly like the standard Ctrl+a = Select All).
+;;
 ;; In general, any C- / M- style key **not defined in this file**
 ;; will behave as the application's original shortcut.
 ;;

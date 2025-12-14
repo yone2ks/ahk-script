@@ -3,7 +3,7 @@
 ;;
 
 ; Ctrl+9: Activate Chrome
-^9::{
+$^9::{
   if WinExist("ahk_exe chrome.exe")
     WinActivate
   else
